@@ -7,22 +7,50 @@ namespace thanawat_sr
         protected string brand;
         protected bool plug;
         protected bool powerOn;
+
+        public string Brand
+        {
+            get
+            {
+                return brand;
+            }
+            set
+            {
+                brand = value;
+            }
+        }
+
+        public ElectricEquipment(bool plugged = false, string brand = "Unknown")
+        {
+            Brand = brand;
+            plug = plugged;
+        }
+
         public virtual void TurnOn()
         {
             if (plug)
             {
                 powerOn = true;
-                Console.WriteLine("Now {0} is On!!!", brand);
+                Console.WriteLine("Now {0} is On!!!\n", brand);
             }
             else
             {
-                Console.WriteLine("It's can't use without plugged");
+                Console.WriteLine("It's can't use without plugged\n");
             }
         }
         public virtual void TurnOff()
         {
             powerOn = false;
-            Console.WriteLine("Now {0} is OFF!!!", brand);
+            Console.WriteLine("Now {0} is OFF!!!\n", brand);
+        }
+
+        public virtual string ToString()
+        {
+
+            Console.WriteLine(GetType());
+            string returntext = string.Format("Brand : {0}\nPlugged : {1}\nPower On : {2}\n", brand, plug, powerOn);
+            Console.WriteLine(returntext);
+            return returntext;
         }
     }
 
@@ -33,6 +61,7 @@ namespace thanawat_sr
             this.brand = brand;
             plug = plugged;
         }
+
     }
 
     class Fan : ElectricEquipment
@@ -47,31 +76,47 @@ namespace thanawat_sr
 
         public override void TurnOn()
         {
-        input:
-            Console.Write("Open on what level? [1/2/3] : ");
-            string levelstr = Console.ReadLine();
-            try
+            if (plug)
             {
-                level = Int32.Parse(levelstr);
-                if (level > 0 && level <= 3)
+            input:
+                Console.Write("Open {0} on what level? [1/2/3] : ", brand);
+                string levelstr = Console.ReadLine();
+                try
                 {
-                    Console.WriteLine("Now The {0} fan is on Level {1}", brand, levelstr);
+                    level = Int32.Parse(levelstr);
+                    if (level > 0 && level <= 3)
+                    {
+                        powerOn = true;
+                        Console.WriteLine("\nNow {0} is on Level {1}!!!\n", brand, levelstr);
+                    }
+                    else
+                    {
+                        goto input;
+                    }
                 }
-                else
+                catch (Exception)
                 {
+                    Console.WriteLine("error");
                     goto input;
                 }
             }
-            catch (Exception)
+            else
             {
-                Console.WriteLine("error");
-                goto input;
+                Console.WriteLine("It's can't use without plugged\n");
             }
         }
         public override void TurnOff()
         {
             level = 0;
             Console.WriteLine("Now {0} is OFF!!!", brand);
+        }
+
+        public override string ToString()
+        {
+            Console.WriteLine(GetType());
+            string returntext = string.Format("Brand : {0}\nPlugged : {1}\nPower On : {2}\nLevel : {3}\n", brand, plug, powerOn, level);
+            Console.WriteLine(returntext);
+            return returntext;
         }
     }
 }
